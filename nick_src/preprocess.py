@@ -167,8 +167,11 @@ def create_embedding(embedding_path,train_word, test_word):
             word2Idx[split[0]] = len(word2Idx)
     embeddings = np.array(embeddings)
     np.save('emb.npy', embeddings)
+    print(embeddings.shape)
+    print('save emb sucess!')
     with open('word2IDx.pickle', 'wb') as f:
         pickle.dump(word2Idx, f)
+    print('save word2IDx sucess!')
 def get_pos_index(pos_list, word):
     word = list(word)
     pos = nltk.pos_tag(word)[0][1]
@@ -181,8 +184,12 @@ def create_data(word2Idx, flag, pos_pos1_list, pos_pos2_list):
     if flag == 'train':
         words, pos1, pos2, label = load_train_data(train_path)
         label = np.array(label)
+        with open('root_train.pickle','rb') as f:
+            root = pickle.load(f)
     elif flag == 'test':
         words, pos1, pos2 = load_test_data(test_path)
+        with open('root_test.pickle', 'rb') as f:
+            root = pickle.load(f)
     tokenMatrix = []
     position1Matrix = []
     position2Matrix = []
@@ -198,7 +205,10 @@ def create_data(word2Idx, flag, pos_pos1_list, pos_pos2_list):
         e1 = pos1[_id]
         e2 = pos2[_id]
 
-        
+        '''
+        got_index = getWordIdx(root[_id], word2Idx)
+        wordvec.append(got_index)
+        '''
         got_index = getWordIdx(words[_id].split()[e1], word2Idx)
         wordvec.append(got_index)
         got_index = getWordIdx(words[_id].split()[e2], word2Idx)
@@ -273,16 +283,19 @@ def getWordIdx(word, word2Idx):
 
 
 if __name__ == '__main__':
-    #test_word, test_pos1, test_pos2 = load_test_data(test_path)
+    test_word, test_pos1, test_pos2 = load_test_data(test_path)
+    '''
     with open('word2IDx.pickle','rb') as f:
         word2Idx = pickle.load(f)
+    '''
     '''
     train_token, train_pos1, train_pos2, train_y= create_data(word2Idx, 'train')
     test_token, test_pos1, test_pos2 = create_data(word2Idx, 'test')
     '''
     train_word, pos1, pos2, label = load_train_data(train_path)
-    create_pos_set(train_word, pos1, pos2)
+    #create_pos_set(train_word, pos1, pos2)
     #pos_pos1_list, pos_pos2_list = create_pos_set(train_word, pos1, pos2)
+    create_embedding(embedding_path, train_word, test_word)
     '''
     with open('pos1_list.pkl','rb') as f:
         pos_pos1_list = pickle.load(f)
