@@ -3,5 +3,6 @@
 *__pycache__
 result/
 t*.pickle
-model/
+model/*
 .DS_Store
+!model/.gitkeep
