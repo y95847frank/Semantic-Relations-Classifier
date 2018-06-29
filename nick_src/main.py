@@ -109,7 +109,7 @@ with open('word2IDx.pickle', 'rb') as f:
         predict_cls = np.argmax(final_model, axis=1)
         
         count = 8001
-        with open('../dataset/myans.txt','w') as f:
+        with open('../ans.txt','w') as f:
             for item in range(predict_cls.shape[0]): #17018
                 #print(item)
                 f.write(str(count) + '\t' + label_map[predict_cls[item]] + '\n')
